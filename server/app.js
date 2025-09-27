@@ -13,7 +13,7 @@ import dataProcessingRoutes from './routes/dataProcessing.routes.js';
 import customerDataRoutes from './routes/customerData.routes.js';
 import chatbotRoutes from './routes/chatbot.routes.js';
 import mlAnalyticsRoutes from './routes/mlAnalytics.routes.js';
-
+import uploadRoutes from './routes/upload.routes.js';
 const app = express();
 
 app.use(cors());
@@ -34,6 +34,9 @@ app.use('/api/data-processing', dataProcessingRoutes);
 app.use('/api/customer-data', customerDataRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/ml-analytics', mlAnalyticsRoutes);
+app.use('/api/uploads', uploadRoutes);
+
+
 
 app.use(errorHandler);
 

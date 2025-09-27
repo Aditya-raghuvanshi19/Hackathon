@@ -1,5 +1,5 @@
 import express from 'express';
-import { mlAnalyticsService } from '../services/mlAnalyticsService.js';
+import { mlAnalyticsService } from '../services/mlAnalytics.service.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
