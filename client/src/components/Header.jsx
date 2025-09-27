@@ -56,12 +56,20 @@ const Header = () => {
               
               <>
                 <Button variant="ghost" size="sm" asChild>
-                  
-                      <Link to="/dashboard" className="flex items-center space-x-1">
-                        <User size={16} />
-                        <span>Dashboard</span>
-                      </Link>
-                   
+                  <Link to="/dashboard" className="flex items-center space-x-1">
+                    <User size={16} />
+                    <span>Dashboard</span>
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/data-processing" className="flex items-center space-x-1">
+                    <span>Data Processing</span>
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/customer-analytics" className="flex items-center space-x-1">
+                    <span>Customer Analytics</span>
+                  </Link>
                 </Button>
                 <Button variant="outline" size="sm" onClick={logout}>
                   Logout
@@ -107,6 +115,11 @@ const Header = () => {
                 <Button variant="outline" size="lg" asChild className="w-full">
                   <Link to="/dashboard" onClick={closeMenu}>
                     Dashboard
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild className="w-full">
+                  <Link to="/data-processing" onClick={closeMenu}>
+                    Data Processing
                   </Link>
                 </Button>
                 <Button variant="default" size="lg" className="w-full" onClick={() => {

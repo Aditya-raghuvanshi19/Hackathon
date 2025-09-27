@@ -10,6 +10,8 @@ import Services from "./pages/Services";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import DataProcessing from "./pages/DataProcessing";
+import CustomerDataProcessing from "./pages/CustomerDataProcessing";
 
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -31,6 +33,8 @@ const App = () => (
             
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/data-processing" element={<DataProcessing />} />
+            <Route path="/customer-analytics" element={<CustomerDataProcessing />} />
            
             
        
