@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Button } from '../components/ui/button';
-import FileUploader from '../components/FileUploader';
-import ProcessingStatus from '../components/ProcessingStatus';
-import DataVisualization from '../components/DataVisualization';
+import FileUploader from '../components/data-processing/FileUploader';
+import ProcessingStatus from '../components/data-processing/ProcessingStatus';
+import DataVisualization from '../components/data-processing/DataVisualization';
 import CustomerDataDashboard from '../components/CustomerDataDashboard';
 import Chatbot from '../components/Chatbot';
 import { 
