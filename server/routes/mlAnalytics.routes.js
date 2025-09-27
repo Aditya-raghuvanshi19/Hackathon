@@ -1,11 +1,11 @@
 import express from 'express';
 import { mlAnalyticsService } from '../services/mlAnalyticsService.js';
-import { authenticateUser } from '../middleware/auth.middleware.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 // Apply authentication to all routes
-router.use(authenticateUser);
+router.use(authMiddleware);
 
 // Predict customer lifetime value
 router.get('/predict-ltv/:customerId', async (req, res) => {

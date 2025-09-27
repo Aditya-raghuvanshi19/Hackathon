@@ -1,11 +1,11 @@
 import express from 'express';
 import { nlpService } from '../services/nlpService.js';
-import { authenticateUser } from '../middleware/auth.middleware.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 // Apply authentication to all routes
-router.use(authenticateUser);
+router.use(authMiddleware);
 
 // Chat endpoint - main interface for natural language queries
 router.post('/query', async (req, res) => {

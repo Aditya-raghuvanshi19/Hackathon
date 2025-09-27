@@ -1,12 +1,12 @@
 import express from 'express';
 import { customerDataService } from '../services/customerDataService.js';
 import CustomerData from '../models/customerData.model.js';
-import { authenticateUser } from '../middleware/auth.middleware.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 // Apply authentication to all routes
-router.use(authenticateUser);
+router.use(authMiddleware);
 
 // Process and merge customer data from multiple files
 router.post('/process-customer-data', async (req, res) => {

@@ -12,7 +12,7 @@ import {
   getJobStatus,
   getMetrics
 } from '../controllers/dataProcessing.controller.js';
-import { authenticateUser } from '../middleware/auth.middleware.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
@@ -56,7 +56,7 @@ const upload = multer({
 });
 
 // Apply authentication to all routes
-router.use(authenticateUser);
+router.use(authMiddleware);
 
 // File upload and management routes
 router.post('/upload', upload.single('file'), uploadFile);
