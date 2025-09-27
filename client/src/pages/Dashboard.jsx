@@ -28,7 +28,7 @@ const Dashboard = () => {
 
   const fetchMetrics = async () => {
     try {
-      const res = await fetch(import.meta.env.VITE_BACKEND_SERVER + 'api/metrics', {
+      const res = await fetch(import.meta.env.VITE_BACKEND_SERVER + 'api/uploads/metrics', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -41,11 +41,11 @@ const Dashboard = () => {
   const fetchProcessedData = async () => {
     try {
       setLoading(true);
-      const res = await fetch(import.meta.env.VITE_BACKEND_SERVER + 'api/processed', {
+      const res = await fetch(import.meta.env.VITE_BACKEND_SERVER + 'api/uploads/processed', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      setProcessedData(data);
+      setProcessedData(data?.data || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -78,8 +78,24 @@ const Dashboard = () => {
     }
   };
 
-  const downloadReport = (type) => {
-    window.open(import.meta.env.VITE_BACKEND_SERVER + `api/download/${type}?token=${token}`, '_blank');
+  const downloadReport = async (type) => {
+    try {
+      const res = await fetch(import.meta.env.VITE_BACKEND_SERVER + `api/uploads/download/${type}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Download failed');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `customer_data.${type}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   if (!isAuthenticated) return null;
@@ -128,7 +144,7 @@ const Dashboard = () => {
                   <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="processed" stroke="#8884d8" />
+                  <Line type="monotone" dataKey="count" stroke="#8884d8" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
@@ -138,7 +154,7 @@ const Dashboard = () => {
             <CardContent className="h-64 flex justify-center items-center">
               <ResponsiveContainer>
                 <PieChart>
-                  <Pie data={metrics?.kpis || []} dataKey="value" nameKey="name" outerRadius={80} label>
+                  <Pie data={metrics?.kpis || []} dataKey="value" nameKey="label" outerRadius={80} label>
                     {metrics?.kpis?.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28'][index % 3]} />
                     ))}
