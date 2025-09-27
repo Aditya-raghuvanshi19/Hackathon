@@ -112,10 +112,28 @@ class CustomerDataService {
       // Save merged customer data
       const savedCustomers = [];
       for (const [customerId, customerData] of customerDataMap) {
+        // Calculate analytics from transactions
+        const analytics = this.buildAnalytics(customerData.transactions);
+
         // Calculate quality score
         customerData.processingInfo.qualityScore = this.calculateDataQuality(customerData);
-        
-        const customer = new CustomerData(customerData);
+        // Attach analytics and flatten convenient fields
+        const flatName = customerData.customerInfo?.name;
+        const flatEmail = customerData.customerInfo?.email;
+        const flatPhone = customerData.customerInfo?.phone;
+
+        const customer = new CustomerData({
+          ...customerData,
+          name: flatName,
+          email: flatEmail,
+          phone: flatPhone,
+          analytics,
+          // store input file references for provenance
+          processingInfo: {
+            ...customerData.processingInfo,
+            sourceFiles: fileIds
+          }
+        });
         await customer.save();
         savedCustomers.push(customer);
       }
@@ -131,6 +149,44 @@ class CustomerDataService {
       console.error('Customer data processing error:', error);
       throw error;
     }
+  }
+
+  buildAnalytics(transactions = []) {
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      return {
+        totalSpent: 0,
+        totalTransactions: 0,
+        averageOrderValue: 0,
+        purchaseFrequency: 0,
+        favoriteCategory: null,
+        customerSegment: 'New'
+      };
+    }
+
+    const totalTransactions = transactions.length;
+    const totalSpent = transactions.reduce((sum, t) => sum + (Number(t.totalAmount || t.amount) || 0), 0);
+    const averageOrderValue = totalTransactions ? totalSpent / totalTransactions : 0;
+
+    const categoryCount = {};
+    transactions.forEach(t => {
+      const cat = t?.product?.category;
+      if (cat) categoryCount[cat] = (categoryCount[cat] || 0) + 1;
+    });
+    const favoriteCategory = Object.entries(categoryCount).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+
+    let customerSegment = 'New';
+    if (totalSpent > 10000) customerSegment = 'VIP';
+    else if (totalSpent > 5000) customerSegment = 'Premium';
+    else if (totalTransactions > 10) customerSegment = 'Regular';
+
+    return {
+      totalSpent,
+      totalTransactions,
+      averageOrderValue,
+      purchaseFrequency: this.calculatePurchaseFrequency(transactions),
+      favoriteCategory,
+      customerSegment
+    };
   }
 
   async processFileData(data, file) {
